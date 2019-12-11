@@ -153,7 +153,7 @@ namespace wj_lidar
        {
          s_n32ScanIndex = 0;
          g_u32PreFrameNo = l_u32FrameNo;
-
+         float scaleFactor = (unsigned char)data[1092];
          for(int j = 0; j < 1000;j=j+2)
          {
            scandata[s_n32ScanIndex] = (((unsigned char)data[85+j]) << 8) + ((unsigned char)data[86+j]);
@@ -162,7 +162,7 @@ namespace wj_lidar
            {
              scandata[s_n32ScanIndex]= NAN;
            }
-           scan.intensities[s_n32ScanIndex] = 0;
+           scaninden[s_n32ScanIndex] = (unsigned char)data[114+1000+j / 2] * scaleFactor * 2;
            s_n32ScanIndex++;
          }
        }
@@ -170,6 +170,7 @@ namespace wj_lidar
        {
          if(g_u32PreFrameNo == l_u32FrameNo)
          {
+           float scaleFactor = (unsigned char)data[444];
            for(int j = 0; j < 352;j=j+2)
            {
              scandata[s_n32ScanIndex] =(((unsigned char)data[85+j]) << 8) + ((unsigned char)data[86+j]);
@@ -178,7 +179,7 @@ namespace wj_lidar
              {
                scandata[s_n32ScanIndex]= NAN;
              }
-             scan.intensities[s_n32ScanIndex] = 0;
+             scaninden[s_n32ScanIndex] = (unsigned char)data[114+352+j / 2] * scaleFactor * 2;
              s_n32ScanIndex++;
            }
           // adjust angle_min to min_ang config param
@@ -206,17 +207,12 @@ namespace wj_lidar
            return false;
          }
        }
-
-
-
-
        return true;
      }
      else
      {
        return false;
      }
-
    }
 
    bool wj_715_lidar_protocol::checkXor( char *recvbuf,  int recvlen)
@@ -245,5 +241,4 @@ namespace wj_lidar
        return false;
      }
    }
-
 }
