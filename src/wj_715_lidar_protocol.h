@@ -35,6 +35,7 @@ namespace wj_lidar
     ros::NodeHandle nh;
     ros::Publisher marker_pub;                       //saomiao shujufabu
     sensor_msgs::LaserScan scan;
+    ros::Time start_scan_time;
 
     bool setConfig(wj_715_lidar::wj_715_lidarConfig &new_config,uint32_t level);
     bool heartstate;

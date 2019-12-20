@@ -44,6 +44,7 @@ namespace wj_lidar
      scan.range_max = 60;
      scan.ranges.resize(676);
      scan.intensities.resize(676);
+     start_scan_time = ros::Time::now();
 
      cout << "wj_715_lidar_protocl start success" << endl;
 
@@ -195,9 +196,11 @@ namespace wj_lidar
                scan.intensities[j - index_min]=scaninden[j];
            }
 
-           ros::Time scan_time = ros::Time::now();
-           scan.header.stamp = scan_time;
+           ros::Time end_scan_time = ros::Time::now();
+           scan.header.stamp = end_scan_time;
+           scan.scan_time = (end_scan_time - start_scan_time).toSec();
            marker_pub.publish(scan);
+           start_scan_time = end_scan_time;
          }
 
           else
@@ -213,6 +216,7 @@ namespace wj_lidar
      {
        return false;
      }
+
    }
 
    bool wj_715_lidar_protocol::checkXor( char *recvbuf,  int recvlen)
